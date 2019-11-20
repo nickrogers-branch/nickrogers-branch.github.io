@@ -9,11 +9,11 @@
 
       if (err == null) {
             console.log(err, data);
-            document.getElementById('result').value = JSON.stringify(data);
+            document.getElementById('result').innerHTML = JSON.stringify(data);
           }
           else {
             console.log(err, data);
-            document.getElementById('result').value = err;
+            document.getElementById('result').innerHTML = err;
           }
 
       function sendSMS(form) {
@@ -51,6 +51,11 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+.sub
+{
+  overflow: scroll;
 }
 
 .container div {
@@ -129,21 +134,23 @@ body {
 <body>
 
   <div class="container" role="main">
-        <div class="c1">
+        <div class="c1 sub">
           <form onsubmit="sendSMS(this); return false;">
             <input id="phone" name="phone" type="tel" placeholder="(650) 123-4567" />
             <br/>
             <input type="submit"/>
         </form>
         </div>
-        <div class="c2">
-          <textarea id="result" type="text" value="" style="height:420px;width:400px;" rows="100" cols="100"/>
+        <div class="c2 sub">
+          <!-- <textarea id="result" type="text" value="" style="height:420px;width:400px;" rows="100" cols="100"/> -->
+          <p id="result">
+          </p>
         </div>
-        <div class="c3">
+        <div class="c3 sub">
         </div>
-        <div class="c4">
+        <div class="c4 sub">
         </div>
-        <div class="c5">
+        <div class="c5 sub">
         </div>
       </div>
 
