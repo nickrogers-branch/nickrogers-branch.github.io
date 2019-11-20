@@ -8,7 +8,12 @@
     branch.init('key_live_kkGffiMKsmMX4B5umosCzlkduueBt6qZ', function(err, data) {
       console.log(data);
 
-      var phone = form.phone.value;
+      branch.data(function(err, data) {
+        console.log(err, data);
+      });
+
+      function sendSMS(form) {
+                var phone = form.phone.value;
                 var linkData = {
                     tags: [],
                     channel: 'Website',
@@ -28,11 +33,7 @@
                 };
                 branch.sendSMS(phone, linkData, options, callback);
                 form.phone.value = "";
-
-      document.getElementById('branch-mobile-action').onclick = function()
-      {
-        console.log('clicked');
-      };
+            }
     });
   </script>
 </head>
@@ -125,6 +126,11 @@ body {
 
   <div class="container" role="main">
         <div class="c1">
+          <form onsubmit="sendSMS(this); return false;">
+            <input id="phone" name="phone" type="tel" placeholder="(650) 123-4567" />
+            <br/>
+            <input type="submit"/>
+        </form>
         </div>
         <div class="c2">
         </div>
