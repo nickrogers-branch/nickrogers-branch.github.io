@@ -14,7 +14,7 @@
 
       var snowmanObj = new Object();
       snowmanObj.name = document.getElementById("name-input").value;
-      snowmanObj.hat = document.getElementById("head-selection").value;
+      snowmanObj.head = document.getElementById("head-selection").value;
       snowmanObj.neck = document.getElementById("neck-selection").value;
       var snowmanJSON = JSON.stringify(snowmanObj);
 
@@ -104,16 +104,15 @@ body
 
       <h2>Head</h2>
       <select name="head" id="head-selection">
-        <option value="baseball_cap">Select an Option</option>
+        <option value="normal_hat">Select an Option</option>
         <option value="normal_hat">Normal Hat</option>
         <option value="baseball_cap">Baseball Cap</option>
         <option value="beanie">Beanie</option>
-        <option value="h2">Other hat</option>
       </select>
 
       <h2>Neck</h2>
       <select name="head" id="neck-selection">
-        <option value="">Select an Option</option>
+        <option value="bow_tie">Select an Option</option>
         <option value="bow_tie">Bow Tie</option>
         <option value="tie">Tie</option>
         <option value="scarf">Scarf</option>
