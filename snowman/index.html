@@ -1,0 +1,139 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // load Branch
+      (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode autoAppIndex banner closeBanner closeJourney creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode trackCommerceEvent logEvent disableTracking".split(" "), 0);
+    // init Branch
+    branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', function(err, data) {
+      console.log(data);
+    });
+
+    function saveClicked() {
+      console.log("Save clicked");
+
+      var snowmanObj = new Object();
+      snowmanObj.name = document.getElementById("name-input").value;
+      snowmanObj.hat = document.getElementById("head-selection").value;
+      snowmanObj.neck = document.getElementById("neck-selection").value;
+      var snowmanJSON = JSON.stringify(snowmanObj);
+
+      var linkData = {
+        data: {
+          'snowman_obj': snowmanJSON
+        }
+      };
+
+      branch.link(linkData, function(err, link) {
+        console.log(link);
+
+        var appButton = document.getElementById("open-app-button");
+        appButton.style.display = "block";
+        appButton.setAttribute("href", link);
+      });
+
+    };
+  </script>
+</head>
+<style type="text/css">
+
+body
+{
+  margin: 0;
+  font-family: "HelveticaNeue", "Helvetica-Neue", "Helvetica Neue", "Helvetica", sans-serif;
+}
+
+.container
+{
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.container div
+{
+  box-sizing: border-box;
+  min-height: 150px;
+  min-width: 150px;
+}
+
+.container
+{
+  /* display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap; */
+}
+
+#open-app-button
+{
+  display: none;
+}
+
+@media (min-width: 600px)
+{
+  .container
+  {
+    margin-left: 10px;
+  }
+}
+
+@media (min-width: 800px)
+{
+  .container
+  {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+</style>
+<body>
+
+  <div class="container" role="main">
+
+    <h1>Select Accessories</h1>
+
+    <form action="#" onsubmit="saveClicked();return false">
+
+      <h2>Name Your Snowman</h2>
+      <input id="name-input" type="text"></input>
+
+      <h2>Head</h2>
+      <select name="head" id="head-selection">
+        <option value="baseball_cap">Select an Option</option>
+        <option value="normal_hat">Normal Hat</option>
+        <option value="baseball_cap">Baseball Cap</option>
+        <option value="beanie">Beanie</option>
+        <option value="h2">Other hat</option>
+      </select>
+
+      <h2>Neck</h2>
+      <select name="head" id="neck-selection">
+        <option value="">Select an Option</option>
+        <option value="bow_tie">Bow Tie</option>
+        <option value="tie">Tie</option>
+        <option value="scarf">Scarf</option>
+        <option value="branch_pin">Branch Pin</option>
+      </select>
+
+      <br><br><br>
+      <!-- <input type="submit" value="Continue in App"> -->
+      <input type="submit" value="Save">
+
+      <br><br><br>
+
+      <a href="#" id="open-app-button">Open in App</a>
+    </form>
+
+  </div>
+
+</body>
+
+<script>
+</script>
+
+</html>
