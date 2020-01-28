@@ -1,0 +1,31 @@
+<html>
+<head>
+<script type="text/javascript">
+
+branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', function(err, data) {
+  console.log(err, data);
+});
+
+// Generate Branch links
+function createBranchLink()
+{
+  utm_data = getUrlVars();
+
+  branch.data(function(err, data) {
+    console.log(err, data);
+
+    // branch.link(linkData, function(err, link) {
+    //   // Do something with the link here.
+    //   console.log(link);
+    // });
+  });
+}
+
+</script>
+</head>
+<body>
+  <form name="formname" onsubmit="createBranchLink(); return false">
+    <input type="submit" value="Make Link"></input>
+  </form>
+</body>
+</html>
