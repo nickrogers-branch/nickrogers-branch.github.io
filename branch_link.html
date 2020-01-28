@@ -12,9 +12,9 @@ function createBranchLink()
   branch.data(function(err, data) {
     console.log(err, data);
 
-    console.log(data['~campaign'])
-    console.log(data['~channel'])
-    console.log(data['~feature'])
+    console.log(data['data_parsed']['~campaign'])
+    console.log(data['data_parsed']['~channel'])
+    console.log(data['data_parsed']['~feature'])
 
     // branch.link(linkData, function(err, link) {
     //   // Do something with the link here.
