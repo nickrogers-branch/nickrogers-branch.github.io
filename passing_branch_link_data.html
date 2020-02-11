@@ -2,24 +2,39 @@
 <head>
 <script type="text/javascript">
 
+// 1.
+// Initialize Branch:
 (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode autoAppIndex banner closeBanner closeJourney creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode trackCommerceEvent logEvent disableTracking".split(" "), 0);
 
-branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2');
+// 2.
+// Insert live key here:
+branch.init('LIVE KEY GOES HERE');
 
-// Generate Branch links
+// 3.
+// Generate Branch links:
 function createBranchLink()
 {
+  // 4.
   branch.data(function(err, data) {
     console.log(err, data);
 
-    console.log(data.data_parsed['~campaign'])
-    console.log(data.data_parsed['~channel'])
-    console.log(data.data_parsed['~feature'])
+    // 5.
+    var linkData = {
+      tags: [],
+      channel: data.data_parsed['~channel'],
+      feature: data.data_parsed['~feature'],
+      campaign: data.data_parsed['~campaign'],
+      data: {
+        'foo' : 'bar'
+      }
+    };
 
-    // branch.link(linkData, function(err, link) {
-    //   // Do something with the link here.
-    //   console.log(link);
-    // });
+    // 6.
+    branch.link(linkData, function(err, link) {
+      // 7.
+      // Do something with the link here.
+      console.log(link);
+    });
   });
 }
 
