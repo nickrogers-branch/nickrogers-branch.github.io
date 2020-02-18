@@ -38,6 +38,12 @@
         appButton.setAttribute("href", link);
       });
 
+      // Segment analytics
+      analytics.track('Snowman Saved', {
+        snowman_name: snowmanObj.name,
+        course: 'Intro to Analytics',
+      });
+
     };
   </script>
 </head>
