@@ -21,10 +21,10 @@ function sendSMS()
     // 5.
     var linkData = {
       // You can add some tag like "SMS" to indicate that the user came from one site, then used SMS.
-      tags: ["sms"],
-      channel: data.data_parsed['~channel'],
-      feature: data.data_parsed['~feature'],
-      campaign: data.data_parsed['~campaign'],
+      tags: ["sms", "CUSTOM TAGS GO HERE"],
+      channel: 'CHANNEL GOES HERE',
+      feature: 'FEATURE GOES HERE',
+      campaign: 'CAMPAIGN GOES HERE',
       data: {
         // Add any extra data to the link here.
         'foo' : 'bar'

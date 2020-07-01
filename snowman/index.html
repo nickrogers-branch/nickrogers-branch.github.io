@@ -31,7 +31,8 @@
 
       // Event tracking
       analytics.track('Page Opened', {
-        browser_fingerprint_id: fingerprint // add the browser fingerprint to the Segment track event
+        browser_fingerprint_id: fingerprint, // add the browser fingerprint to the Segment track event
+        user_id: fingerprint
       });
 
       console.log("loadBranchAndGetFingerprint completed.")
