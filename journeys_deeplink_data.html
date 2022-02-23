@@ -6,33 +6,27 @@
       (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode autoAppIndex banner closeBanner closeJourney creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode trackCommerceEvent logEvent disableTracking".split(" "), 0);
     // init Branch
     branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', function(err, data) {
-      console.log(data);
 
-      var phone = form.phone.value;
-                var linkData = {
-                    tags: [],
-                    channel: 'Website',
-                    feature: 'TextMeTheApp',
-                    data: {
-                        'foo': 'bar'
-                    }
-                };
-                var options = {};
-                var callback = function(err, result) {
-                    if (err) {
-                        alert("Sorry, something went wrong.");
-                    }
-                    else {
-                        alert("SMS sent!");
-                    }
-                };
-                branch.sendSMS(phone, linkData, options, callback);
-                form.phone.value = "";
-
-      document.getElementById('branch-mobile-action').onclick = function()
-      {
-        console.log('clicked');
+      // optional additional deep link data
+      var linkData = {
+        campaign: 'content 123',
+        channel: 'facebook',
+        feature: 'dashboard',
+        stage: 'new user',
+        tags: [ 'tag1', 'tag2', 'tag3' ],
+        alias: '',
+        data: {
+          'custom_bool': true,
+          'custom_int': Date.now(),
+          'custom_string': 'hello',
+          '$og_title': 'Title',
+          '$og_description': 'Description',
+          '$og_image_url':'http://lorempixel.com/400/400'
+        }
       };
+
+      branch.setBranchViewData(linkData);
+
     });
   </script>
 </head>
@@ -46,6 +40,11 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+.sub
+{
+  overflow: scroll;
 }
 
 .container div {
@@ -124,15 +123,23 @@ body {
 <body>
 
   <div class="container" role="main">
-        <div class="c1">
+        <div class="c1 sub">
+          <form onsubmit="sendSMS(this); return false;">
+            <input id="phone" name="phone" type="tel" placeholder="(650) 123-4567" />
+            <br/>
+            <input type="submit"/>
+        </form>
         </div>
-        <div class="c2">
+        <div class="c2 sub">
+          <!-- <textarea id="result" type="text" value="" style="height:420px;width:400px;" rows="100" cols="100"/> -->
+          <p id="result">
+          </p>
         </div>
-        <div class="c3">
+        <div class="c3 sub">
         </div>
-        <div class="c4">
+        <div class="c4 sub">
         </div>
-        <div class="c5">
+        <div class="c5 sub">
         </div>
       </div>
 
