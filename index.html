@@ -8,6 +8,12 @@
     branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', function(err, data) {
       console.log(data);
 
+      branch.setBranchViewData({
+        data: {
+          'extra_description': '<p>more description</p>',
+        }
+      });
+
       var phone = form.phone.value;
                 var linkData = {
                     tags: [],
