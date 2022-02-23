@@ -14,21 +14,6 @@
           'some_sweet_js': '</script><script> console.log("Custom JS output.");</script>'
         }
       }
-
-      if (item.is_in_stock) {
-        branch.setBranchViewData({
-          data: {
-            'copy': 'In stock, order now in the app!'
-          }
-        }
-      } else {
-        branch.setBranchViewData({
-          data: {
-            'copy': 'Out of stock, check back soon.'
-          }
-        }
-      }
-
       });
     });
   </script>
