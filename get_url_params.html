@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CELEBRATION!</title>
+</head>
+<body>
+<a id="maccontinuebtn" href="#">CLICK ME</a>
+</body>
+
+<script type="text/javascript">
+    const query_string = window.location.search;
+    const url_params = new URLSearchParams(query_string);
+    const original_url = url_params.get('$original_url');
+
+    const link_to_update = document.getElementById('maccontinuebtn');
+    link_to_update.setAttribute('href', original_url);
+</script>
+</html>
