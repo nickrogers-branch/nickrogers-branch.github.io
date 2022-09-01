@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CELEBRATION!</title>
+</head>
+<body>
+<a id="maccontinuebtn" href="#">CLICK ME</a>
+</body>
+
+<script type="text/javascript">
+    const query_string = window.location.search;
+    const url_params = new URLSearchParams(query_string);
+    const source = url_params.get('utm_source');
+
+    const branch_link = 'https://myapptest.app.link/?~channel=' + source;
+
+    // Either (A) Update some href
+    const link_to_update = document.getElementById('LINK_TO_UPDATE');
+    link_to_update.setAttribute('href', original_url);
+
+    // Or (B) client-side redirect with JS
+    window.location.replace(branch_link);
+    // window.location.href() will simulate a mouse click, which isn't necessary. We just want the client side redirect.
+</script>
+</html>
