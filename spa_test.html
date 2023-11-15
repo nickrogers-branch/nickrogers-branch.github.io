@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // close the Journey. This also covers the corner case where there's already
         // a banner being displayed on a previous part of the site that we want to
-        // eliminate now that the guest has navigated away from that content.
+        // eliminate now that the guest has navigated away from that content
         branch.closeJourney(function(err, data) {
             console.log(err, data);
         });
 
-        // reload the banner after a brief, async pause.
+        // reload the banner after a brief, async pause to avoid a race condition
         setTimeout(() => {
             branch.track("pageview");
-        }, 150);
+        }, 1000);
 
     }, 5000);
 });
