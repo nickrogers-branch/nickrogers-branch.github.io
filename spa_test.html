@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(err, data);
         });
 
-        // reload the banner
-        branch.track("pageview");
+        setTimeout(() => {
+            branch.track("pageview");
+            console.log('Triggered 2nd timer');
+        }, 1000);
 
     }, 5000);
 });
