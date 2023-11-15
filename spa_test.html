@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         branch.closeJourney(function(err, data) {
             console.log(err, data);
-            // reload the banner
-            branch.track("pageview");
         });
+
+        // reload the banner
+        branch.track("pageview");
 
     }, 5000);
 });
