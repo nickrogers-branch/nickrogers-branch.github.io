@@ -22,13 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         window.history.pushState({}, '', '/spa-path-test');
         console.log('URL changed to: ' + window.location.href);
 
+        // close the Journey. This also covers the corner case where there's already
+        // a banner being displayed on a previous part of the site that we want to
+        // eliminate now that the guest has navigated away from that content.
         branch.closeJourney(function(err, data) {
             console.log(err, data);
         });
 
+        // reload the banner after a brief, async pause.
         setTimeout(() => {
             branch.track("pageview");
-            console.log('Triggered 2nd timer');
         }, 150);
 
     }, 5000);
@@ -36,4 +39,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </html>
-
