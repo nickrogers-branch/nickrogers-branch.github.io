@@ -1,0 +1,20 @@
+<html>
+<head>
+</head>
+<body>
+  <a href="https://example.com" onclick="handleClick(event, this.href)">Click me</a>
+
+  <script>
+    function handleClick(event, href) {
+      // Prevent the default action
+      event.preventDefault();
+
+      // Log to the console
+      console.log(`Link clicked: ${href}`);
+
+      // If you want to navigate after the log, uncomment the next line
+      // window.location.href = href;
+    }
+  </script>
+</body>
+</html>
