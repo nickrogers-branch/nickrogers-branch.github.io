@@ -15,11 +15,13 @@
 		// Function to retrieve the referring link
 		function getReferringLink() {
 		  const referringLink = document.referrer;
+		  console.log('Referring link:', referringLink);
 		  return referringLink;
 		}
 
 		// Function to make the API request to Branch to load data behind the Branch link
 		async function getBranchLinkData(branchLink) {
+		  console.log('Fetching Branch link data for:', branchLink);
 		  const url = `https://api2.branch.io/v1/url?url=${encodeURIComponent(branchLink)}&branch_key=key_live_opbTjnZIc7Ci2hT1wJasclfkwtmMlnIu`;
 
 		  try {
@@ -31,10 +33,12 @@
 		    });
 
 		    if (!response.ok) {
+		      console.error(`Error fetching Branch link data: ${response.statusText}`);
 		      throw new Error(`Error fetching Branch link data: ${response.statusText}`);
 		    }
 
 		    const data = await response.json();
+		    console.log('Branch link data retrieved:', data);
 		    createNewBranchLink(data);
 		  } catch (error) {
 		    console.error('Failed to retrieve Branch link data:', error);
@@ -43,6 +47,7 @@
 
 		// Function to create a new Branch link based on incoming link data
 		async function createNewBranchLink(linkData) {
+		  console.log('Creating new Branch link with data:', linkData);
 		  const url = 'https://api2.branch.io/v1/url';
 		  const requestData = {
 		    data: linkData.data,
@@ -60,12 +65,14 @@
 		    });
 
 		    if (!response.ok) {
+		      console.error(`Error creating new Branch link: ${response.statusText}`);
 		      throw new Error(`Error creating new Branch link: ${response.statusText}`);
 		    }
 
 		    const newLinkData = await response.json();
-		    console.log('New Branch link created:', newLinkData);
+		    console.log('New Branch link created successfully:', newLinkData);
 		    // Redirect to the new link
+		    console.log('Redirecting to new Branch link:', newLinkData.url);
 		    window.location.href = newLinkData.url || 'placeholder-action-url';
 		  } catch (error) {
 		    console.error('Failed to create new Branch link:', error);
@@ -74,8 +81,10 @@
 
 		// Example usage
 		(async () => {
+		  console.log('Starting the Branch link processing script...');
 		  const referringLink = getReferringLink();
 		  if (referringLink) {
+		    console.log('Referring link found, proceeding to fetch Branch link data.');
 		    await getBranchLinkData(referringLink);
 		  } else {
 		    console.log('No referring link found.');
