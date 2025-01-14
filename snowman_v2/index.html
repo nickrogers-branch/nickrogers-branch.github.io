@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Branch Snowman Factory</title>
+
+  <!-- Ensures mobile-friendly layout -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Inline CSS -->
@@ -13,47 +15,28 @@
     }
 
     .container {
-      margin: 0;
-      margin-left: 10px;
-      padding: 0;
-      margin-top: 20px;
-      width: 100%;
-    }
-
-    .container div {
-      box-sizing: border-box;
-      min-height: 150px;
-      min-width: 150px;
+      /* Use relative width so it shrinks on small screens */
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 10px;
     }
 
     #open-app-button {
       display: none;
     }
 
-    @media (min-width: 600px) {
-      .container {
-        margin-left: 10px;
-      }
-    }
-
-    @media (min-width: 800px) {
-      .container {
-        width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-
-    /* --- Snowman preview styling --- */
+    /* Snowman preview styling */
     .preview-container {
       margin-top: 40px;
     }
 
+    /* The container that holds the stacked images */
     .snowman-container {
-      position: relative;     /* to stack absolutely positioned images */
-      display: inline-block;  /* shrink-wrap around the images */
-      width: 300px;           /* you can change this size as needed */
-      height: 300px;          /* same as above */
+      position: relative;
+      display: inline-block;
+      width: 300px;   /* can adjust or make fluid if you like */
+      height: 300px;  /* keep it square or match your image ratio */
     }
 
     .snowman-container img {
@@ -64,106 +47,58 @@
       height: auto;
     }
 
-    /*
-    If your base snowman image is sideways and needs rotation, uncomment:
+    #open-app-button {
+      display: none; /* hidden by default */
+      margin-top: 10px;
+    }
 
+    /* Just for example styling */
+    #branch-link-display {
+      display: none; /* hidden by default */
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* If the base snowman is sideways, rotate here:
     #base-snowman {
       transform: rotate(90deg);
     }
     */
+
+    /* Example: Let’s shrink the snowman a bit more on very narrow screens */
+    @media (max-width: 400px) {
+      .snowman-container {
+        width: 200px;
+        height: 200px;
+      }
+    }
   </style>
 
   <!-- Branch / Segment initialization script -->
   <script>
     // load Branch
-    (function(b,r,a,n,c,h,_,s,d,k){
-      if(!b[n]||!b[n]._q){
-        for(;s<_.length;)c(h,_[s++]);
-        d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";
-        k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h
-      }
-    })(
-      window,
-      document,
-      "script",
-      "branch",
-      function(b,r){b[r]=function(){b._q.push([r,arguments])}},
-      {_q:[],_v:1},
-      "addListener applyCode autoAppIndex banner closeBanner closeJourney "
-        + "creditHistory credits data deepview deepviewCta first getCode init link "
-        + "logout redeem referrals removeListener sendSMS setBranchViewData setIdentity "
-        + "track validateCode trackCommerceEvent logEvent disableTracking".split(" "),
-      0
-    );
+    (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener banner closeBanner closeJourney data deepview deepviewCta first init link logout removeListener setBranchViewData setIdentity track trackCommerceEvent logEvent disableTracking getBrowserFingerprintId crossPlatformIds lastAttributedTouchData setAPIResponseCallback qrCode setRequestMetaData setAPIUrl getAPIUrl setDMAParamsForEEA".split(" "), 0);
 
     // init Branch
-    const loadBranchAndGetFingerprint = new Promise(function(resolve, reject) {
-      console.log('Initialized Branch');
-      branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', {}, function(err, data) {
-        branch.getBrowserFingerprintId(function(err, fingerprint) {  // fetch the browser fingerprint
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve({...data, fingerprint});
-        });
-      });
+    branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', function(err, data) {
+      console.log(err, data);
     });
 
-    loadBranchAndGetFingerprint.then(function(data) {
-      const { fingerprint } = data;
+    // const loadBranchAndGetFingerprint = new Promise(function(resolve, reject) {
+    //   console.log('Initialized Branch');
+    //   branch.init('key_live_abMVppLQKWJLIg9krOs0Immkqxn0Xpy2', {}, function(err, data) {
+    //     branch.getBrowserFingerprintId(function(err, fingerprint) {
+    //       if (err) {
+    //         reject(err);
+    //         return;
+    //       }
+    //       resolve({...data, fingerprint});
+    //     });
+    //   });
+    // });
 
-      // Load the Segment SDK
-      !function(){
-        var analytics=window.analytics=window.analytics||[];
-        if(!analytics.initialize)
-          if(analytics.invoked)
-            window.console&&console.error&&console.error("Segment snippet included twice.");
-          else {
-            analytics.invoked=!0;
-            analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview",
-              "identify","reset","group","track","ready","alias","debug","page","once","off","on"
-            ];
-            analytics.factory=function(t){
-              return function(){
-                var e=Array.prototype.slice.call(arguments);
-                e.unshift(t);
-                analytics.push(e);
-                return analytics;
-              };
-            };
-            for(var t=0;t<analytics.methods.length;t++){
-              var e=analytics.methods[t];
-              analytics[e]=analytics.factory(e);
-            }
-            analytics.load=function(t,e){
-              var n=document.createElement("script");
-              n.type="text/javascript";n.async=!0;
-              n.src="https://cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";
-              var a=document.getElementsByTagName("script")[0];
-              a.parentNode.insertBefore(n,a);
-              analytics._loadOptions=e;
-            };
-            analytics.SNIPPET_VERSION="4.1.0";
-            analytics.load("LVAalElj2MbUI2oQbxWZvIhILPQNl7hK");
-            // Identify by fingerprint
-            analytics.identify(fingerprint, {
-              userID: fingerprint
-            });
-            analytics.page();
-          }
-      }();
-
-      // Event tracking
-      analytics.track('Page Opened', {
-        browser_fingerprint_id: fingerprint,
-        user_id: fingerprint
-      });
-
-      console.log("loadBranchAndGetFingerprint completed.");
-    });
-
-    // This function updates the preview images
+    // Update the preview images
     function updateSnowman() {
       const headValue = document.getElementById("head-selection").value;
       const neckValue = document.getElementById("neck-selection").value;
@@ -173,89 +108,90 @@
         case "normal_hat":    headSrc = "hat_snowman_full.png";          break;
         case "baseball_cap":  headSrc = "baseball_cap_snowman_full.png"; break;
         case "beanie":        headSrc = "beanie_snowman_full.png";       break;
-        default:              headSrc = ""; // no selection
+        default:              headSrc = "";
       }
 
       let neckSrc = "";
       switch (neckValue) {
-        case "bow_tie":       neckSrc = "bow_tie_snowman_full.png";     break;
-        case "tie":           neckSrc = "tie_snowman_full.png";         break;
-        case "scarf":         neckSrc = "scarf_snowman_full.png";       break;
-        case "branch_pin":    neckSrc = "branch_pin_snowman_full.png";  break;
-        default:              neckSrc = ""; // no selection
+        case "bow_tie":       neckSrc = "bow_tie_snowman_full.png";    break;
+        case "tie":           neckSrc = "tie_snowman_full.png";        break;
+        case "scarf":         neckSrc = "scarf_snowman_full.png";      break;
+        case "branch_pin":    neckSrc = "branch_pin_snowman_full.png"; break;
+        default:              neckSrc = "";
       }
 
-      // Grab the elements
       const headImg = document.getElementById("head-snowman");
       const neckImg = document.getElementById("neck-snowman");
 
-      // Show/hide the head accessory
+      // Show/hide head accessory
       if (headSrc) {
         headImg.src = headSrc;
         headImg.style.display = "block";
       } else {
+        headImg.removeAttribute("src");
         headImg.style.display = "none";
-        headImg.removeAttribute("src"); // remove src entirely if you like
       }
 
-      // Show/hide the neck accessory
+      // Show/hide neck accessory
       if (neckSrc) {
         neckImg.src = neckSrc;
         neckImg.style.display = "block";
       } else {
-        neckImg.style.display = "none";
         neckImg.removeAttribute("src");
+        neckImg.style.display = "none";
       }
     }
 
-    // Saves / shares the snowman, triggers Branch link creation + Segment track
+    // Save clicked - create Branch link
     function saveClicked() {
       console.log("Save clicked");
 
-      // Gather user selections
-      var snowmanObj = {
+      const snowmanObj = {
         name: document.getElementById("name-input").value,
         head: document.getElementById("head-selection").value,
         neck: document.getElementById("neck-selection").value
       };
-      var snowmanJSON = JSON.stringify(snowmanObj);
+      const snowmanJSON = JSON.stringify(snowmanObj);
 
-      var linkData = {
+      const linkData = {
         data: {
-          'snowman_obj': snowmanJSON
+          snowman_obj: snowmanJSON
         }
       };
 
-      // Create Branch link
+      console.log(linkData);
+
       branch.link(linkData, function(err, link) {
         if (err) {
           console.error("Branch link creation failed:", err);
           return;
         }
-        console.log("Generated link:", link);
+        console.log("Branch link generated:", link);
 
-        // Show "Open in App" button and set the URL
-        var appButton = document.getElementById("open-app-button");
-        appButton.style.display = "block";
-        appButton.setAttribute("href", link);
+        // const appButton = document.getElementById("open-app-button");
+        // appButton.style.display = "inline-block";
+        // appButton.setAttribute("href", link);
 
-        // Get the browser fingerprint again for Segment tracking
-        branch.getBrowserFingerprintId(function(err, fingerprint) {
-          if (err) {
-            console.error("Failed to get fingerprint for Segment:", err);
-            return;
-          }
+        // Show the link text
+        const linkOutput = document.getElementById("branch-link-display");
+        linkOutput.innerText = "Branch Link: " + link;
+        linkOutput.style.display = "block";
 
-          // Track an event in Segment
-          analytics.track('Product Shared', {
-            browser_fingerprint_id: fingerprint,
-            snowman_name: snowmanObj.name
-          });
-
-          console.log('Save click finished. Link ready:', link);
-        });
+        // Put that link behind an "Open in App" button
+        const openAppBtn = document.getElementById("open-app-button");
+        openAppBtn.href = link;
+        openAppBtn.style.display = "inline-block";
       });
     }
+
+    // Attach the event listener in JS instead of inline
+    window.addEventListener("DOMContentLoaded", function() {
+      const form = document.getElementById("snowman-form");
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();    // Stop the form from reloading the page
+        saveClicked();         // Run your save logic
+      });
+    });
   </script>
 </head>
 
@@ -263,7 +199,7 @@
   <div class="container" role="main">
     <h1>Branch Snowman Factory</h1>
 
-    <form onsubmit="saveClicked(); return false;">
+    <form id="snowman-form">
       <h2>Name Your Snowman</h2>
       <input id="name-input" type="text" />
 
@@ -286,24 +222,27 @@
 
       <br><br>
       <input type="submit" value="Save" />
-
       <br><br>
       <a href="#" id="open-app-button">Open in App</a>
     </form>
 
-    <!-- Snowman preview section -->
+    <!-- Where we show the Branch link -->
+    <div id="branch-link-display"></div>
+
+    <!-- "Open in App" button (hidden until Branch link is created) -->
+    <a id="open-app-button" href="#" target="_blank">Open in App</a>
+
     <div class="preview-container">
       <h2>Preview</h2>
       <div class="snowman-container">
         <!-- Base Snowman Image -->
         <img id="base-snowman" src="snowman.png" alt="Base Snowman" />
 
-        <!-- Overlays (start empty) -->
-        <img id="head-snowman" src="" alt="Head Accessory" />
-        <img id="neck-snowman" src="" alt="Neck Accessory" />
+        <!-- Overlays (start hidden) -->
+        <img id="head-snowman" alt="Head Accessory" style="display:none;" />
+        <img id="neck-snowman" alt="Neck Accessory" style="display:none;" />
       </div>
     </div>
-
   </div>
 </body>
 </html>
