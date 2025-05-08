@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>Celebration</title>
+<style type="text/css">
+
+@keyframes celebrate {
+  25% {
+    background: #ff005d;
+  }
+
+  50% {
+    background: #5100ff;
+  }
+
+  75% {
+    background: #00ffaa;
+  }
+
+  100% {
+    background: #000000;
+  }
+}
+
+@keyframes celebrate-but-better {
+  25% {
+    color: #000000;
+  }
+
+  50% {
+    color: #ff005d;
+  }
+
+  75% {
+    color: #5100ff;
+  }
+
+  100% {
+    color: #00ffaa;
+  }
+}
+
+body
+{
+  animation-name: celebrate;
+  animation-duration: 150ms;
+  animation-iteration-count: infinite;
+}
+
+h1, h2
+{
+  margin-top: 10%;
+  text-align: center;
+  font-family: "HelveticaNeue, Helvetica-Neue", "Helvetica Neue", "Helvetica", sans-serif;
+  animation-name: celebrate-but-better;
+  animation-duration: 130ms;
+  animation-iteration-count: infinite;
+}
+
+h1
+{
+  font-size: 73px;
+}
+
+h2
+{
+  font-size: 48px;
+}
+
+</style>
+<style>
+  .flashing-link {
+    display: block;
+    margin-top: 32px;
+    text-align: center;
+    font-size: 2rem;
+    font-family: "HelveticaNeue, Helvetica-Neue", "Helvetica Neue", "Helvetica", sans-serif;
+    text-decoration: none;
+    animation: flash-colors 1s infinite;
+    font-weight: bold;
+  }
+  @keyframes flash-colors {
+    0% { color: #ff005d; }
+    25% { color: #5100ff; }
+    50% { color: #00ffaa; }
+    75% { color: #ffcc00; }
+    100% { color: #ff005d; }
+  }
+</style>
+</head>
+<body>
+  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0;">
+    <img src="https://emoji.slack-edge.com/T02BUTP4H/tarek_loves_it/98f874cbabea3568.png" alt="Tarek Loves It" style="max-width: 100%; max-height: 100%;">
+    <a href="https://www.linkedin.com/in/tarektantawy/" target="_blank" rel="noopener noreferrer" class="flashing-link">TAREK'S LINKEDIN</a>
+  </div>
+</body>
+</html>
