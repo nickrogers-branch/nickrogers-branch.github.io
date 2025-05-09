@@ -89,8 +89,30 @@ h2
 </head>
 <body>
   <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0;">
-    <img src="https://emoji.slack-edge.com/T02BUTP4H/tarek_loves_it/98f874cbabea3568.png" alt="Tarek Loves It" style="max-width: 100%; max-height: 100%;">
-    <a href="https://www.linkedin.com/in/tarektantawy/" target="_blank" rel="noopener noreferrer" class="flashing-link">TAREK'S LINKEDIN</a>
+    <img id="tarek-image" src="https://emoji.slack-edge.com/T02BUTP4H/tarek_loves_it/98f874cbabea3568.png" alt="Tarek Loves It" style="max-width: 100%; max-height: 100%;">
+    <a href="https://www.linkedin.com/in/tarektantawy/" target="_blank" rel="noopener noreferrer" class="flashing-link">TAREK'S LINKEDIN -></a>
   </div>
+  <script>
+    const tarekImages = [
+      "https://emoji.slack-edge.com/T02BUTP4H/tarek/6dbcbfb910c4e7b5.jpg",
+      "https://emoji.slack-edge.com/T02BUTP4H/tarek-is-confused/dd91bd0c93627926.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/tarek-is-also-here/158485c2d9b2faa8.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/tarek-believes-in-a-thing-called-love/147e128905788db8.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/hat-tarek/ad2b35a160c30524.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/baby-tarek/f1ef62a5e3e13f42.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/space_tarek/abe516eb72b9e78d.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/serious_tarek/5c79cff3b22be10b.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/bank-robber-tarek/251a8c924608b0d0.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/impersonating_tarek/0bb3bda9fa083c7f.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/we_will_never_forget_tarek/351b3b412327bf18.png",
+      "https://emoji.slack-edge.com/T02BUTP4H/star-trek-img/80ebb886781e36a6.jpg"
+    ];
+    let currentIndex = 0;
+    const imgElement = document.getElementById('tarek-image');
+    setInterval(() => {
+      imgElement.src = tarekImages[currentIndex];
+      currentIndex = (currentIndex + 1) % tarekImages.length;
+    }, 1000);
+  </script>
 </body>
 </html>
