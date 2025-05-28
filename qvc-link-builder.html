@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campaign Link Builder</title>
+  <style>
+    /* Reset & variables */
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --primary: #1a73e8;
+      --primary-hover: #1669c1;
+      --text: #202124;
+      --subtext: #5f6368;
+      --radius: 8px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --border: #e0e0e0;
+      --success: #0f9d58;
+      --warning: #f4b400;
+      --error: #d93025;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 800px;
+      padding: 2rem;
+    }
+    h1 {
+      margin: 0 0 1.5rem;
+      font-size: 1.75rem;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.25rem;
+      margin: 1.5rem 0 1rem;
+      color: var(--primary);
+    }
+    .file-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .file-input {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .file-input input[type="file"] {
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    .file-label {
+      display: block;
+      padding: 0.75rem 1rem;
+      border: 2px dashed #ccc;
+      border-radius: var(--radius);
+      background: #fafafa;
+      color: var(--subtext);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .file-label:hover {
+      border-color: var(--primary);
+    }
+    .fileName {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text);
+      word-break: break-all;
+    }
+    button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: default;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    button.secondary:hover:not(:disabled) {
+      background: rgba(26, 115, 232, 0.05);
+    }
+    #downloadLink {
+      display: block;
+      margin-top: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      text-align: center;
+    }
+    #downloadLink:hover {
+      text-decoration: underline;
+    }
+    .join-options {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background-color: white;
+    }
+    .summary {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #f0f7ff;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+    }
+    .summary span {
+      font-weight: bold;
+    }
+    .status {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      display: none;
+    }
+    .status.success {
+      background-color: #e6f4ea;
+      color: var(--success);
+      display: block;
+    }
+    .status.error {
+      background-color: #fce8e6;
+      color: var(--error);
+      display: block;
+    }
+    .data-preview {
+      margin-top: 1.5rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+    th {
+      background-color: #f8f9fa;
+      position: sticky;
+      top: 0;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .checkbox-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .checkbox-item input {
+      margin-right: 0.5rem;
+    }
+    .select-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+    }
+    .select-actions button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Campaign Link Builder</h1>
+    
+    <div class="file-section">
+      <h2>1. Upload Files</h2>
+      <div class="file-input">
+        <label class="file-label" for="tacticsInput">Upload Tactics CSV (UTM-T)</label>
+        <input type="file" id="tacticsInput" accept=".csv" />
+        <div id="tacticsFileName" class="fileName"></div>
+      </div>
+      
+      <div class="file-input">
+        <label class="file-label" for="creativesInput">Upload Creatives CSV (UTM-C)</label>
+        <input type="file" id="creativesInput" accept=".csv" />
+        <div id="creativesFileName" class="fileName"></div>
+      </div>
+      
+      <div class="file-input">
+        <label class="file-label" for="existingInput">Upload Existing Pairs CSV (Optional)</label>
+        <input type="file" id="existingInput" accept=".csv" />
+        <div id="existingFileName" class="fileName"></div>
+      </div>
+    </div>
+    
+    <div id="configSection" class="hidden">
+      <div class="file-section">
+        <h2>2. Configure Join</h2>
+        <div class="form-group">
+          <label for="joinDirection">Join Direction:</label>
+          <select id="joinDirection">
+            <option value="tacticsWithCreatives">Each Tactic with selected Creatives</option>
+            <option value="creativesWithTactics">Each Creative with selected Tactics</option>
+          </select>
+        </div>
+        
+        <div id="tacticsSelection" class="form-group">
+          <label for="tacticsList">Select Tactics:</label>
+          <div class="select-actions">
+            <button id="selectAllTactics" class="secondary">Select All</button>
+            <button id="deselectAllTactics" class="secondary">Deselect All</button>
+          </div>
+          <div id="tacticsList" class="checkbox-list"></div>
+        </div>
+        
+        <div id="creativesSelection" class="form-group">
+          <label for="creativesList">Select Creatives:</label>
+          <div class="select-actions">
+            <button id="selectAllCreatives" class="secondary">Select All</button>
+            <button id="deselectAllCreatives" class="secondary">Deselect All</button>
+          </div>
+          <div id="creativesList" class="checkbox-list"></div>
+        </div>
+        
+        <div class="summary">
+          This will generate <span id="pairCount">0</span> unique UTM pairs, with <span id="newPairCount">0</span> new pairs after deduplication.
+        </div>
+      </div>
+      
+      <div class="button-container">
+        <button id="previewBtn">Preview Results</button>
+        <button id="processBtn">Generate & Download</button>
+      </div>
+    </div>
+    
+    <div id="previewSection" class="hidden">
+      <h2>3. Preview Results</h2>
+      <div class="data-preview">
+        <table id="previewTable">
+          <thead>
+            <tr>
+              <th>UTM-T</th>
+              <th>UTM-C</th>
+              <th>Campaign</th>
+              <th>Channel</th>
+              <th>Feature</th>
+            </tr>
+          </thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <div class="button-container">
+        <button id="backBtn" class="secondary">Back to Config</button>
+        <button id="downloadUtmCompleteBtn" class="secondary">Download UTM-Complete</button>
+        <button id="downloadBtn">Generate & Download Branch</button>
+      </div>
+    </div>
+    
+    <div id="statusMessage" class="status"></div>
+    <a id="downloadLink" style="display:none;" download="campaign_links.csv">Download Branch Links CSV</a>
+    <a id="downloadUtmCompleteLink" style="display:none;" download="utm_complete.csv">Download UTM-Complete CSV</a>
+  </div>
+
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <script>
+    // File inputs and status elements
+    const tacticsInput = document.getElementById('tacticsInput');
+    const creativesInput = document.getElementById('creativesInput');
+    const existingInput = document.getElementById('existingInput');
+    const tacticsFileName = document.getElementById('tacticsFileName');
+    const creativesFileName = document.getElementById('creativesFileName');
+    const existingFileName = document.getElementById('existingFileName');
+    const configSection = document.getElementById('configSection');
+    const previewSection = document.getElementById('previewSection');
+    const statusMessage = document.getElementById('statusMessage');
+    const downloadLink = document.getElementById('downloadLink');
+    const downloadUtmCompleteLink = document.getElementById('downloadUtmCompleteLink');
+    const pairCount = document.getElementById('pairCount');
+    const newPairCount = document.getElementById('newPairCount');
+    const tacticsList = document.getElementById('tacticsList');
+    const creativesList = document.getElementById('creativesList');
+    const previewTable = document.getElementById('previewTable');
+    const previewBody = document.getElementById('previewBody');
+    
+    // Buttons
+    const previewBtn = document.getElementById('previewBtn');
+    const processBtn = document.getElementById('processBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadUtmCompleteBtn = document.getElementById('downloadUtmCompleteBtn');
+    const backBtn = document.getElementById('backBtn');
+    const selectAllTactics = document.getElementById('selectAllTactics');
+    const deselectAllTactics = document.getElementById('deselectAllTactics');
+    const selectAllCreatives = document.getElementById('selectAllCreatives');
+    const deselectAllCreatives = document.getElementById('deselectAllCreatives');
+    const joinDirection = document.getElementById('joinDirection');
+    
+    // Data storage
+    let tacticsData = [];
+    let creativesData = [];
+    let existingPairs = [];
+    let selectedTactics = [];
+    let selectedCreatives = [];
+    let resultPairs = [];
+    
+    // File upload handlers
+    tacticsInput.addEventListener('change', () => {
+      const file = tacticsInput.files[0];
+      if (file) {
+        tacticsFileName.textContent = file.name;
+        parseCSV(file, (data) => {
+          tacticsData = data;
+          checkFilesLoaded();
+          populateCheckboxList(tacticsData, tacticsList, 'tactics');
+        });
+      } else {
+        tacticsFileName.textContent = '';
+        tacticsData = [];
+        checkFilesLoaded();
+      }
+    });
+    
+    creativesInput.addEventListener('change', () => {
+      const file = creativesInput.files[0];
+      if (file) {
+        creativesFileName.textContent = file.name;
+        parseCSV(file, (data) => {
+          creativesData = data;
+          checkFilesLoaded();
+          populateCheckboxList(creativesData, creativesList, 'creatives');
+        });
+      } else {
+        creativesFileName.textContent = '';
+        creativesData = [];
+        checkFilesLoaded();
+      }
+    });
+    
+    existingInput.addEventListener('change', () => {
+      const file = existingInput.files[0];
+      if (file) {
+        existingFileName.textContent = file.name;
+        parseCSV(file, (data) => {
+          existingPairs = data;
+          updatePairCounts();
+        });
+      } else {
+        existingFileName.textContent = '';
+        existingPairs = [];
+        updatePairCounts();
+      }
+    });
+    
+    // Join direction change handler
+    joinDirection.addEventListener('change', updatePairCounts);
+    
+    // Button click handlers
+    selectAllTactics.addEventListener('click', (e) => {
+      e.preventDefault();
+      selectAll('tactics');
+    });
+    
+    deselectAllTactics.addEventListener('click', (e) => {
+      e.preventDefault();
+      deselectAll('tactics');
+    });
+    
+    selectAllCreatives.addEventListener('click', (e) => {
+      e.preventDefault();
+      selectAll('creatives');
+    });
+    
+    deselectAllCreatives.addEventListener('click', (e) => {
+      e.preventDefault();
+      deselectAll('creatives');
+    });
+    
+    previewBtn.addEventListener('click', () => {
+      generatePairs();
+      populatePreviewTable();
+      configSection.classList.add('hidden');
+      previewSection.classList.remove('hidden');
+    });
+    
+    backBtn.addEventListener('click', () => {
+      previewSection.classList.add('hidden');
+      configSection.classList.remove('hidden');
+    });
+    
+    processBtn.addEventListener('click', () => {
+      generatePairs();
+      populatePreviewTable();
+      configSection.classList.add('hidden');
+      previewSection.classList.remove('hidden');
+    });
+    
+    downloadBtn.addEventListener('click', () => {
+      generateAndDownloadCSV();
+    });
+    
+    downloadUtmCompleteBtn.addEventListener('click', () => {
+      downloadUtmCompleteCSV();
+    });
+    
+    // Helper functions
+    function parseCSV(file, callback) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: results => {
+          callback(results.data);
+        },
+        error: error => {
+          showStatus(`Error parsing CSV: ${error.message}`, 'error');
+        }
+      });
+    }
+    
+    function checkFilesLoaded() {
+      if (tacticsData.length > 0 && creativesData.length > 0) {
+        configSection.classList.remove('hidden');
+        updatePairCounts();
+      } else {
+        configSection.classList.add('hidden');
+      }
+    }
+    
+    function populateCheckboxList(data, container, type) {
+      container.innerHTML = '';
+      
+      // Check if data contains UTM-T or UTM-C columns
+      const idColumn = type === 'tactics' ? 'UTM-T' : 'UTM-C';
+      
+      if (!data.some(row => row[idColumn])) {
+        showStatus(`Error: ${idColumn} column not found in ${type} file`, 'error');
+        return;
+      }
+      
+      // Create checkbox for each item
+      data.forEach((row, index) => {
+        const id = row[idColumn];
+        if (!id) return;
+        
+        const item = document.createElement('div');
+        item.className = 'checkbox-item';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `${type}-${index}`;
+        checkbox.value = index;
+        checkbox.checked = true;
+        checkbox.addEventListener('change', () => {
+          updateSelectedItems(type);
+          updatePairCounts();
+        });
+        
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = id;
+        
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        container.appendChild(item);
+      });
+      
+      updateSelectedItems(type);
+    }
+    
+    function updateSelectedItems(type) {
+      const container = type === 'tactics' ? tacticsList : creativesList;
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+      
+      if (type === 'tactics') {
+        selectedTactics = Array.from(checkboxes)
+          .filter(cb => cb.checked)
+          .map(cb => parseInt(cb.value));
+      } else {
+        selectedCreatives = Array.from(checkboxes)
+          .filter(cb => cb.checked)
+          .map(cb => parseInt(cb.value));
+      }
+      
+      updatePairCounts();
+    }
+    
+    function selectAll(type) {
+      const container = type === 'tactics' ? tacticsList : creativesList;
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = true);
+      updateSelectedItems(type);
+    }
+    
+    function deselectAll(type) {
+      const container = type === 'tactics' ? tacticsList : creativesList;
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false);
+      updateSelectedItems(type);
+    }
+    
+    function generatePairs() {
+      resultPairs = [];
+      const direction = joinDirection.value;
+      
+      // Create pairs based on join direction
+      if (direction === 'tacticsWithCreatives') {
+        selectedTactics.forEach(tacticIndex => {
+          const tactic = tacticsData[tacticIndex];
+          
+          selectedCreatives.forEach(creativeIndex => {
+            const creative = creativesData[creativeIndex];
+            resultPairs.push(mergePair(tactic, creative));
+          });
+        });
+      } else {
+        selectedCreatives.forEach(creativeIndex => {
+          const creative = creativesData[creativeIndex];
+          
+          selectedTactics.forEach(tacticIndex => {
+            const tactic = tacticsData[tacticIndex];
+            resultPairs.push(mergePair(tactic, creative));
+          });
+        });
+      }
+      
+      // Deduplicate against existing pairs
+      if (existingPairs.length > 0) {
+        const existingPairKeys = new Set(existingPairs.map(pair => 
+          createPairKey(pair['UTM-T'], pair['UTM-C'])
+        ));
+        
+        resultPairs = resultPairs.filter(pair => 
+          !existingPairKeys.has(createPairKey(pair['UTM-T'], pair['UTM-C']))
+        );
+      }
+      
+      updatePairCounts();
+    }
+    
+    function createPairKey(utmT, utmC) {
+      return `${utmT || ''}::${utmC || ''}`;
+    }
+    
+    function mergePair(tactic, creative) {
+      // Create a new object with all properties from both objects
+      const merged = { ...tactic, ...creative };
+      
+      // If there are conflicts (same key in both objects), prioritize tactic values
+      Object.keys(tactic).forEach(key => {
+        if (key in creative && key !== 'UTM-T' && key !== 'UTM-C') {
+          merged[`${key}_tactic`] = tactic[key];
+          merged[`${key}_creative`] = creative[key];
+        }
+      });
+      
+      return merged;
+    }
+    
+    function updatePairCounts() {
+      if (!tacticsData.length || !creativesData.length) return;
+      
+      const totalPossiblePairs = selectedTactics.length * selectedCreatives.length;
+      pairCount.textContent = totalPossiblePairs;
+      
+      // Calculate new pairs after deduplication
+      if (!existingPairs.length) {
+        newPairCount.textContent = totalPossiblePairs;
+        return;
+      }
+      
+      // Generate a sample of pairs for deduplication count
+      const samplePairs = [];
+      const direction = joinDirection.value;
+      
+      if (direction === 'tacticsWithCreatives') {
+        for (const tacticIndex of selectedTactics) {
+          const tactic = tacticsData[tacticIndex];
+          for (const creativeIndex of selectedCreatives) {
+            const creative = creativesData[creativeIndex];
+            samplePairs.push({
+              'UTM-T': tactic['UTM-T'],
+              'UTM-C': creative['UTM-C']
+            });
+          }
+        }
+      } else {
+        for (const creativeIndex of selectedCreatives) {
+          const creative = creativesData[creativeIndex];
+          for (const tacticIndex of selectedTactics) {
+            const tactic = tacticsData[tacticIndex];
+            samplePairs.push({
+              'UTM-T': tactic['UTM-T'],
+              'UTM-C': creative['UTM-C']
+            });
+          }
+        }
+      }
+      
+      // Deduplicate
+      const existingPairKeys = new Set(existingPairs.map(pair => 
+        createPairKey(pair['UTM-T'], pair['UTM-C'])
+      ));
+      
+      const newPairs = samplePairs.filter(pair => 
+        !existingPairKeys.has(createPairKey(pair['UTM-T'], pair['UTM-C']))
+      );
+      
+      newPairCount.textContent = newPairs.length;
+    }
+    
+    function populatePreviewTable() {
+      previewBody.innerHTML = '';
+      
+      // Display first 10 pairs only
+      const previewPairs = resultPairs.slice(0, 10);
+      
+      previewPairs.forEach(pair => {
+        const row = document.createElement('tr');
+        
+        const utmTCell = document.createElement('td');
+        utmTCell.textContent = pair['UTM-T'] || '';
+        
+        const utmCCell = document.createElement('td');
+        utmCCell.textContent = pair['UTM-C'] || '';
+        
+        const campaignCell = document.createElement('td');
+        campaignCell.textContent = pair['utm_campaign'] || '';
+        
+        const channelCell = document.createElement('td');
+        channelCell.textContent = pair['utm_source'] || '';
+        
+        const featureCell = document.createElement('td');
+        featureCell.textContent = pair['utm_medium'] || '';
+        
+        row.appendChild(utmTCell);
+        row.appendChild(utmCCell);
+        row.appendChild(campaignCell);
+        row.appendChild(channelCell);
+        row.appendChild(featureCell);
+        
+        previewBody.appendChild(row);
+      });
+      
+      if (resultPairs.length > 10) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.textContent = `... and ${resultPairs.length - 10} more pairs`;
+        cell.style.textAlign = 'center';
+        cell.style.fontStyle = 'italic';
+        row.appendChild(cell);
+        previewBody.appendChild(row);
+      }
+      
+      previewSection.querySelector('.data-preview').style.display = 'block';
+    }
+    
+    function downloadUtmCompleteCSV() {
+      if (resultPairs.length === 0) {
+        showStatus('No pairs to download. Please generate pairs first.', 'error');
+        return;
+      }
+      
+      // Get all unique column names from resultPairs
+      const allColumns = new Set();
+      resultPairs.forEach(pair => {
+        Object.keys(pair).forEach(key => {
+          allColumns.add(key);
+        });
+      });
+      
+      // Sort columns to ensure UTM-T and UTM-C come first, followed by utm parameters
+      const sortedColumns = Array.from(allColumns).sort((a, b) => {
+        // UTM-T and UTM-C come first
+        if (a === 'UTM-T') return -1;
+        if (b === 'UTM-T') return 1;
+        if (a === 'UTM-C') return -1;
+        if (b === 'UTM-C') return 1;
+        
+        // Then utm parameters
+        if (a.startsWith('utm_') && !b.startsWith('utm_')) return -1;
+        if (!a.startsWith('utm_') && b.startsWith('utm_')) return 1;
+        
+        // Alphabetical for everything else
+        return a.localeCompare(b);
+      });
+      
+      // Convert to CSV
+      const csv = Papa.unparse(resultPairs, {
+        columns: sortedColumns
+      });
+      
+      // Create download link
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      downloadUtmCompleteLink.href = url;
+      downloadUtmCompleteLink.style.display = 'block';
+      
+      showStatus(`UTM-Complete file with ${resultPairs.length} rows ready for download.`, 'success');
+      
+      // Auto download
+      downloadUtmCompleteLink.click();
+    }
+    
+    function generateAndDownloadCSV() {
+      if (resultPairs.length === 0) {
+        showStatus('No new pairs to generate. All combinations already exist.', 'error');
+        return;
+      }
+      
+      const output = resultPairs.map(row => {
+        const channel = row['utm_source'] || '';
+        const feature = row['utm_medium'] || '';
+        const campaign = row['utm_campaign'] || '';
+        
+        // Build tags array from all other non-empty columns
+        const tagsArr = [];
+        Object.keys(row).forEach(key => {
+          if (['utm_source', 'utm_medium', 'utm_campaign', 'UTM-T', 'UTM-C'].includes(key)) return;
+          const val = row[key];
+          if (val != null && val !== '') {
+            tagsArr.push(`${key}::${val}`);
+          }
+        });
+        const tags = JSON.stringify(tagsArr);
+        
+        const utmC = row['UTM-C'] || '';
+        const utmT = row['UTM-T'] || '';
+        const dataArray = {
+          "$marketing_title": `${utmC}::${utmT}`
+        };
+        const data = JSON.stringify(dataArray);
+        
+        return { channel, feature, campaign, tags, data };
+      });
+      
+      // Convert to CSV
+      const csv = Papa.unparse(output, {
+        columns: ['channel', 'feature', 'campaign', 'tags', 'data']
+      });
+      
+      // Create download link
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      downloadLink.href = url;
+      downloadLink.style.display = 'block';
+      
+      showStatus(`Successfully generated ${resultPairs.length} Branch campaign links!`, 'success');
+      
+      // Auto download
+      downloadLink.click();
+    }
+    
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = `status ${type}`;
+      
+      // Auto hide success messages after 5 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          statusMessage.style.display = 'none';
+        }, 5000);
+      }
+    }
+  </script>
+</body>
+</html>
