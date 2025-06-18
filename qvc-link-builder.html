@@ -526,7 +526,14 @@
         
         const label = document.createElement('label');
         label.htmlFor = checkbox.id;
-        label.textContent = id;
+        
+        // Include Unit FF value if available
+        const unitFF = row['Unit FF'];
+        if (unitFF) {
+          label.textContent = `${id} - ${unitFF}`;
+        } else {
+          label.textContent = id;
+        }
         
         item.appendChild(checkbox);
         item.appendChild(label);
@@ -730,16 +737,44 @@
         return;
       }
       
-      // Get all unique column names from resultPairs
+      // Base URL for ad links
+      const baseAdUrl = 'https://impression.link/impression?branch_key=key_live_kdsXO58ZZrQsaxYGNsmWcoghutb0B538&%243p=a_roku&%24aaid={aaid}&%24household_measurement=true&%24idfa={idfa}&%24s2s=true&~branch_ad_format=App%20Only&~campaign={campaign}&~click_id={click_id}&~cost={cost}&~cost_currency={cost_currency}&~cost_model=CPC&~feature=paid%20advertising&~link_type=AD_LINK';
+      
+      // Generate ad links for each pair
+      const pairsWithAdLinks = resultPairs.map(pair => {
+        // Create ad link by appending all columns as query parameters
+        let adLink = baseAdUrl;
+        
+        Object.keys(pair).forEach(key => {
+          const value = pair[key];
+          // Skip empty, null, or undefined values
+          if (value != null && value !== '') {
+            const encodedKey = encodeURIComponent(key);
+            const encodedValue = encodeURIComponent(value);
+            adLink += `&${encodedKey}=${encodedValue}`;
+          }
+        });
+        
+        return {
+          ...pair,
+          impression_tracker: adLink
+        };
+      });
+      
+      // Get all unique column names from pairsWithAdLinks
       const allColumns = new Set();
-      resultPairs.forEach(pair => {
+      pairsWithAdLinks.forEach(pair => {
         Object.keys(pair).forEach(key => {
           allColumns.add(key);
         });
       });
       
-      // Sort columns to ensure UTM-T and UTM-C come first, followed by utm parameters
+      // Sort columns to ensure UTM-T and UTM-C come first, followed by utm parameters, then impression_tracker at the end
       const sortedColumns = Array.from(allColumns).sort((a, b) => {
+        // impression_tracker comes last
+        if (a === 'impression_tracker') return 1;
+        if (b === 'impression_tracker') return -1;
+        
         // UTM-T and UTM-C come first
         if (a === 'UTM-T') return -1;
         if (b === 'UTM-T') return 1;
@@ -755,7 +790,7 @@
       });
       
       // Convert to CSV
-      const csv = Papa.unparse(resultPairs, {
+      const csv = Papa.unparse(pairsWithAdLinks, {
         columns: sortedColumns
       });
       
