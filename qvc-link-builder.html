@@ -745,10 +745,16 @@
         // Create ad link by appending all columns as query parameters
         let adLink = baseAdUrl;
         
+        // Add utm_campaign parameter with UTM-T_UTM-C format first
+        const utmT = pair['UTM-T'] || '';
+        const utmC = pair['UTM-C'] || '';
+        const campaignValue = `${utmT}_${utmC}`;
+        adLink += `&utm_campaign=${encodeURIComponent(campaignValue)}`;
+        
         Object.keys(pair).forEach(key => {
           const value = pair[key];
-          // Skip empty, null, or undefined values
-          if (value != null && value !== '') {
+          // Skip empty, null, or undefined values, and skip utm_campaign since we already added it
+          if (value != null && value !== '' && key !== 'utm_campaign') {
             const encodedKey = encodeURIComponent(key);
             const encodedValue = encodeURIComponent(value);
             adLink += `&${encodedKey}=${encodedValue}`;
